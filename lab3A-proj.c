@@ -60,7 +60,7 @@ int main(int argc, char** argv){
         fprintf(stderr, "Error in reading Group Desc. using pread\n");
 		exit(2);
     }
-
+// Getting and printing the group summary
  print_group_summ();
  
 
