@@ -48,8 +48,10 @@ int main(int argc, char** argv){
         fprintf(stderr, "Error in reading Super Block using pread\n");
 		exit(2);
     }
-    if (Super_block.s_magic != EXT2_SUPER_MAGIC)
-	        exit(2); /* bad file system */	
+     if (Super_block.s_magic != EXT2_SUPER_MAGIC){
+        fprintf(stderr,  "Bad File System\n" );
+         exit(2); /* bad file system */
+    }
    
  // Getting and printing the information from the Super Block 
   print_superblock_summ();
