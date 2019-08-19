@@ -1,0 +1,7 @@
+.SILENT:
+
+default:
+	gcc -g -Wall -Wextra lab3a.c -o lab3a
+test: default
+	./lab3a trivial.img | sort > test.csv
+	c
