@@ -84,16 +84,16 @@ int main(int argc, char** argv){
 
 void print_superblock_summ(){
 
-    /* Getting and printing the information from the Super Block 
-    *SUPERBLOCK
-    *total number of blocks (decimal)
-    *total number of i-nodes (decimal)
-    *block size (in bytes, decimal)
-    *i-node size (in bytes, decimal)
-    *blocks per group (decimal)
-    *i-nodes per group (decimal)
-    *first non-reserved i-node (decimal)
- */
+  /* Getting and printing the information from the Super Block 
+   *SUPERBLOCK
+   *total number of blocks (decimal)
+   *total number of i-nodes (decimal)
+   *block size (in bytes, decimal)
+   *i-node size (in bytes, decimal)
+   *blocks per group (decimal)
+   *i-nodes per group (decimal)
+   *first non-reserved i-node (decimal)
+   */
   Var32 Blocks_per_Group;
   Var32 Inodes_per_Group;
   Var32 First_NonReversed_Inode;
@@ -112,17 +112,17 @@ void print_superblock_summ(){
 
 void print_group_summ(){
 
- /* Getting and printing the group summary
-    *GROUP
-    *group number (decimal, starting from zero) (Since the we have only one group. So group Number=0)
+  /* Getting and printing the group summary
+   *GROUP
+   *group number (decimal, starting from zero) (Since the we have only one group. So group Number=0)
     *total number of blocks in this group (decimal)
     *total number of i-nodes in this group (decimal)
     
     *number of free blocks (decimal)
     *number of free i-nodes (decimal)
     *block number of free block bitmap for this group (decimal)
-    *block number of free i-node bitmap for this group (decimal)
-    *block number of first block of i-nodes in this group (decimal)
+						  *block number of free i-node bitmap for this group (decimal)
+												 *block number of first block of i-nodes in this group (decimal)
  */
   Var32 Total_num_Blocks;
   //Based on EXT2 Specification, s_blocks_count must be lower or equal to (s_blocks_per_group * number of block groups). It can be lower 
@@ -151,12 +151,11 @@ void free_block(){
     with two comma-separated fields (with no white space).
     1. BFREE
     2. number of the free block (decimal)
-
     Take care to verify that you:
     1. understand whether 1 means allocated or free.
     2. have correctly understood the block number to which the first bit corresponds.
     3. know how many blocks are in each group, and do not interpret more bits than there are blocks in the group.
-   */
+  */
   unsigned int i;
   int j;
   int num_free;
@@ -184,12 +183,11 @@ void free_Inode(){
     Scan the free I-node bitmap for each group. For each free I-node, produce a new-line terminated line, 
     with two comma-separated fields (with no white space).
     1. IFREE
-    2. number of the free I-node (decimal)
-
-    Take care to verify that you:
+					   2. number of the free I-node (decimal)
+					   Take care to verify that you:
     1. understand whether 1 means allocated or free.
     2. have correctly understood the I-node number to which the first bit corresponds.
-    3. know how many I-nodes are in each group, and do not interpret more bits than there are I-nodes in the group.
+					   3. know how many I-nodes are in each group, and do not interpret more bits than there are I-nodes in the group.
    */
   unsigned int i;
   int j;
@@ -244,7 +242,7 @@ void Inode_summ(){
     10.time of last access (mm/dd/yy hh:mm:ss, GMT)
     11.file size (decimal)
     12.number of (512 byte) blocks of disk space (decimal) taken up by this file
-   */
+  */
   struct ext2_inode inode;
   unsigned int i;
   //s_inodes_count: 32bit value indicating the total number of inodes, both used and free, in the file system.
@@ -287,7 +285,13 @@ void Inode_summ(){
       else if(S_ISLNK(inode.i_mode))  file_type = 's';
       
       //Print the fields from 1 to 7
-      fprintf(stdout, "INODE,%d,%c,%d,%d,%d,%d,",(i+1),file_type,inode.i_mode,inode.i_uid,inode.i_gid,inode.i_links_count);
+      fprintf(stdout, "INODE,%d,%c,%o,%d,%d,%d,",
+	      (i+1),
+	      file_type,
+	      inode.i_mode & 0XFFF,
+	      inode.i_uid,
+	      inode.i_gid,
+	      inode.i_links_count);
       
       time_t c_time = inode.i_ctime;
       time_t m_time = inode.i_mtime;
@@ -313,14 +317,15 @@ void Inode_summ(){
       strftime(a_time_format, sizeof(a_time_format), "%m/%d/%y %H:%M:%S %p", &ts);
       
       //Print the fields from 8 to 11.
-      fprintf(stdout, "%s,%s,%s,%u,", c_time_format, m_time_format, a_time_format, inode.i_size);
+      fprintf(stdout, "%s,%s,%s,%u,%d", c_time_format, m_time_format, a_time_format, inode.i_size, inode.i_blocks);
       
       //12.number of (512 byte) blocks of disk space (decimal) taken up by this file
       unsigned int block_index;
       //EXT2_N_BLOCKS --> from ext2_fs.h
-      for(block_index = 0; block_index < EXT2_N_BLOCKS; block_index++){
-	fprintf(stdout, "%d\n", inode.i_block[block_index]);
+      for(block_index = 0; block_index < 15; block_index++){
+	fprintf(stdout, ",%d", inode.i_block[block_index]);
       }//for loop with i_block.
+      fprintf(stdout, "\n");
     }//for loop with int i.
   }
 }
