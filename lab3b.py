@@ -2,8 +2,8 @@
 import sys,csv,math
 
 Dup_blocks=set() # list for duplicate blocks
-superblock_argument=None
-Group_Argument=None
+superblock_argument=0
+Group_Argument=0
 Allocated_blocks={} # dictionary for allocated block 
 inode_argument=[]
 dirent_argument=[]
