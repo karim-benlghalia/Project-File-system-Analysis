@@ -39,7 +39,7 @@ class inode:
 class group:
     def __init__(self,argument):
         self.s_inodes_per_group = int(argument[3])
-        self.bg_inode_table = int(argument[-1])
+        self.bg_inode_table = int(argument[len(argument)-1])
 
 #class for dirent
 class dirent:
