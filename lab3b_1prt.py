@@ -14,7 +14,9 @@ Allocated_Inodes=[]
 # constants
 MAX_B_COUNT =0
 First_Block_Numb=0
-   
+Const_offset1 = 12
+Const_offset2 = 268
+Const_offset3 = 65804
 #class for superblock
 class superblock:
     def __init__(self,argument):
@@ -89,33 +91,33 @@ def check_single_indBlock(inode):
     Numb_Block=inode.INDIRECT_Blocks[0]
     SingleMsg = "INDIRECT BLOCK"
     if inode.INDIRECT_Blocks[0] < 0 or inode.INDIRECT_Blocks[0] >= MAX_B_COUNT:
-        print("INVALID %s %d IN INODE %d AT OFFSET %d" %(SingleMsg,Numb_Block, inode.Inode_Numb, 12))
+        print("INVALID %s %d IN INODE %d AT OFFSET %d" %(SingleMsg,Numb_Block, inode.Inode_Numb, Const_offset1))
     if Numb_Block > 0:
         if Numb_Block < First_Block_Numb:
-            print("RESERVED %s %d IN INODE %d AT OFFSET %d" %(SingleMsg,Numb_Block, inode.Inode_Numb, 12))
-    find_usedBlocks(inode,Numb_Block,12,1)
+            print("RESERVED %s %d IN INODE %d AT OFFSET %d" %(SingleMsg,Numb_Block, inode.Inode_Numb, Const_offset1))
+    find_usedBlocks(inode,Numb_Block,Const_offset1,1)
 
 # check for double indirect blocks
 def check_double_indBlock(inode):
     Numb_Block=inode.INDIRECT_Blocks[1]
     BoubleMsg="DOUBLE INDIRECT BLOCK"
     if inode.INDIRECT_Blocks[1] < 0 or inode.INDIRECT_Blocks[1] >= MAX_B_COUNT:
-        print("INVALID %s %d IN INODE %d AT OFFSET %d" %(BoubleMsg,Numb_Block, inode.Inode_Numb, 268))
+        print("INVALID %s %d IN INODE %d AT OFFSET %d" %(BoubleMsg,Numb_Block, inode.Inode_Numb, Const_offset2))
     if Numb_Block > 0:
         if Numb_Block < First_Block_Numb:
-            print("RESERVED %s %d IN INODE %d AT OFFSET %d" %(BoubleMsg,Numb_Block, inode.Inode_Numb, 268))
-    find_usedBlocks(inode,Numb_Block,268,2)
+            print("RESERVED %s %d IN INODE %d AT OFFSET %d" %(BoubleMsg,Numb_Block, inode.Inode_Numb, Const_offset2))
+    find_usedBlocks(inode,Numb_Block,Const_offset2,2)
 
 # check for triple indirect blocks
 def check_triple_indBlock(inode):
     Numb_Block=inode.INDIRECT_Blocks[2]
     TripleMsg="TRIPLE INDIRECT BLOCK"
     if inode.INDIRECT_Blocks[2] < 0 or inode.INDIRECT_Blocks[2] >= MAX_B_COUNT:
-        print("INVALID %s %d IN INODE %d AT OFFSET %d" %(TripleMsg,Numb_Block, inode.Inode_Numb, 65804))
+        print("INVALID %s %d IN INODE %d AT OFFSET %d" %(TripleMsg,Numb_Block, inode.Inode_Numb, Const_offset3))
     if Numb_Block > 0:
         if Numb_Block < First_Block_Numb:
-            print("RESERVED %s %d IN INODE %d AT OFFSET %d" %(TripleMsg,Numb_Block, inode.Inode_Numb, 65804))
-    find_usedBlocks(inode,Numb_Block,65804,3)
+            print("RESERVED %s %d IN INODE %d AT OFFSET %d" %(TripleMsg,Numb_Block, inode.Inode_Numb, Const_offset3))
+    find_usedBlocks(inode,Numb_Block,Const_offset3,3)
 
 
 def switching(argument):
@@ -163,8 +165,7 @@ def check_Dup_blocks():
             else:
                 DuplMsg="DUPLICATE"
                 print("%s %s BLOCK %d IN INODE %d AT OFFSET %d" %(DuplMsg,indirect, i, index[0], index[1]))
-                
-# check for Inodes 
+
 def check_inode_alloc(inode):
     global Allocated_Inodes
     if inode.Inode_Numb != 0:
@@ -180,6 +181,8 @@ def check_inode_Unalloc(inode):
                     AllocMsg="UNALLOCATED INODE"
                     print("%s %d NOT ON FREELIST" %(AllocMsg,inode.Inode_Numb)) 
     
+
+
 
 def main ():
 
@@ -253,7 +256,7 @@ def main ():
         if InodeN  not in Allocated_Inodes:
             if InodeN  not in IFREE_argument:
                 print("UNALLOCATED INODE %d NOT ON FREELIST" %(InodeN))
-    
+   
 
 
 
