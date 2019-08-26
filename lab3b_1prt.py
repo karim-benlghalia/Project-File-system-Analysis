@@ -10,8 +10,7 @@ dirent_argument=[]
 indirect_argument=[]
 Free_Block_list=[]
 IFREE_argument=[]
-
-
+Allocated_Inodes=[]
 # constants
 MAX_B_COUNT =0
 First_Block_Numb=0
@@ -164,9 +163,23 @@ def check_Dup_blocks():
             else:
                 DuplMsg="DUPLICATE"
                 print("%s %s BLOCK %d IN INODE %d AT OFFSET %d" %(DuplMsg,indirect, i, index[0], index[1]))
+                
+# check for Inodes 
+def check_inode_alloc(inode):
+    global Allocated_Inodes
+    if inode.Inode_Numb != 0:
+        Allocated_Inodes.append(inode.Inode_Numb)
+        if inode.Inode_Numb in IFREE_argument:
+            AllocMsg="ALLOCATED INODE"
+            print("%s %d ON FREELIST" %(AllocMsg,inode.Inode_Numb))
             
-
-
+def check_inode_Unalloc(inode):
+    if inode.File_Type == '0':
+        if inode.Inode_Numb not in IFREE_argument:
+                if inode.Inode_Numb not in Allocated_Inodes:
+                    AllocMsg="UNALLOCATED INODE"
+                    print("%s %d NOT ON FREELIST" %(AllocMsg,inode.Inode_Numb)) 
+    
 
 def main ():
 
@@ -176,14 +189,13 @@ def main ():
         
     #open the CSV file
     try:
-        csv_file=open(sys.argv[1], 'r')
+        input_csvfile=open(sys.argv[1], 'r')
     except IOError:
         sys.stderr.write("Error: cannot open the CSV file \n")
         sys.exit(1)
-       
 
     #read the csv file
-    file_reader=csv.reader(csv_file)
+    file_reader=csv.reader(input_csvfile)
     for Data in file_reader:
         if Data[0] == "SUPERBLOCK":
             superblock_argument=superblock(Data)
@@ -203,7 +215,6 @@ def main ():
             sys.stderr.write("Error: Invild argument in CSV file: \n")
             sys.exit(1)
 
-   
     #Max number of block
     global MAX_B_COUNT
     MAX_B_COUNT =superblock_argument.s_blocks_count
@@ -213,6 +224,10 @@ def main ():
     N_offset = Group_Argument.s_inodes_per_group * superblock_argument.s_inode_size
     G_offset = N_offset / superblock_argument.Block_Size
     First_Block_Numb = int(Group_Argument.bg_inode_table + G_offset)
+    First_Inode=superblock_argument.s_first_inode
+    Inodes_Counts=Inodes_Counts=superblock_argument.s_inodes_count
+
+    
 
     for inodes in inode_argument:
         if inodes.File_Type == 's':
@@ -225,9 +240,20 @@ def main ():
         check_double_indBlock(inodes)
         # check for the triple indirect block
         check_triple_indBlock(inodes)
+         #scan the inode
+        check_inode_alloc(inodes)
+         #scan the inode
+        check_inode_Unalloc(inodes)
+
     Check_indirct_blocks()
     check_Block_alloc()
     check_Dup_blocks()
+    
+    for InodeN in range(First_Inode,Inodes_Counts):
+        if InodeN  not in Allocated_Inodes:
+            if InodeN  not in IFREE_argument:
+                print("UNALLOCATED INODE %d NOT ON FREELIST" %(InodeN))
+    
 
 
 
