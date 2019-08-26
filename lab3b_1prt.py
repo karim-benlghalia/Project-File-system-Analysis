@@ -175,7 +175,7 @@ def check_inode_alloc(inode):
             print("%s %d ON FREELIST" %(AllocMsg,inode.Inode_Numb))
             
 def check_inode_Unalloc(inode):
-    if inode.File_Type == '0':
+    #if inode.File_Type == '0':
         if inode.Inode_Numb not in IFREE_argument:
                 if inode.Inode_Numb not in Allocated_Inodes:
                     AllocMsg="UNALLOCATED INODE"
