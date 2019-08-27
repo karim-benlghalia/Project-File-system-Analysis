@@ -228,13 +228,13 @@ def main ():
         
     #open the CSV file
     try:
-        input_csvfile=open(sys.argv[1], 'r')
+        csv_file=open(sys.argv[1], 'r')
     except IOError:
         sys.stderr.write("Error: cannot open the CSV file \n")
         sys.exit(1)
 
     #read the csv file
-    file_reader=csv.reader(input_csvfile)
+    file_reader=csv.reader(csv_file)
     for Data in file_reader:
         if Data[0] == "SUPERBLOCK":
             global superblock_argument
