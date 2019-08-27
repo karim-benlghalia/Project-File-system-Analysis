@@ -162,7 +162,7 @@ def check_Dup_blocks():
     #set(Dup_blocks)
     for i in Dup_blocks:
         for index in Allocated_blocks[i]:
-            indirect = switching(index[-1])
+            indirect = switching(index[len(index)-1])
             if indirect == "":
                 DuplMsg="DUPLICATE BLOCK"
                 print("%s %d IN INODE %d AT OFFSET %d" %(DuplMsg,i, index[0], index[1]))
@@ -184,12 +184,12 @@ def check_inode_alloc(inode):
 def check_inode_Unalloc(inode):
     global inode_bitmap
     inode_bitmap = IFREE_argument
-    if inode.File_Type == '0':
-        if inode.Inode_Numb not in IFREE_argument:
-                if inode.Inode_Numb not in Allocated_Inodes:
-                    AllocMsg="UNALLOCATED INODE"
-                    print("%s %d NOT ON FREELIST" %(AllocMsg,inode.Inode_Numb)) 
-                    inode_bitmap.append(inode.Inode_Numb)
+   # if inode.File_Type == '0':
+       # if inode.Inode_Numb not in IFREE_argument:
+    if inode.Inode_Numb not in Allocated_Inodes:
+        AllocMsg="UNALLOCATED INODE"
+        print("%s %d NOT ON FREELIST" %(AllocMsg,inode.Inode_Numb)) 
+        inode_bitmap.append(inode.Inode_Numb)
 
 
 def check_directory_block():
@@ -199,7 +199,7 @@ def check_directory_block():
     inode_par_array[2] = 2 #This is for KeyError:2, so I put the 2 into the inode_par_array.
     #for every inode
     for every_inode in inode_argument:
-        link_count = 0;
+        link_count = 0
         for direct in dirent_argument:
             # Count the LINKCOUNT for report incorrect link count.
             if every_inode.Inode_Numb == direct.inode:
