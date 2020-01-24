@@ -21,3 +21,7 @@ lab3b.py:
 	invalid it will print the error message with specifi format.
 	2.I-node Allocation Audits: Scan through all of the I-nodes to determine which are valid/allocated
 	3.Directory Consistency Audits: Scan all of the directories to enumerate all links
+lab3a-final.c: Program to analyze the file system and output a summary to a CSV file
+	       This project more deeply explores the filesystem structures described in Arpaci chapter 39.
+	       The images we will be working with are EXT2 file systems, as described in sections 40.2-40.5.
+	       
