@@ -5,9 +5,9 @@
 * ID: 105179657, 505180791
 
 # File System Interpreter and constancy Analysis:
-Part1 (in C language): Program to analyze the file system and output a summary to a CSV file 
+* Part1 (in C language): Program to analyze the file system and output a summary to a CSV file 
 (describing the super block, groups, free-lists, Inodes, indirect blocks, and directories).
-Part2 (in Python): Program that analyzes the CSV file produced in part 1 and reports on all discovered inconsistencies.
+* Part2 (in Python): Program that analyzes the CSV file produced in part 1 and reports on all discovered inconsistencies.
 
 
 * Makefile:
